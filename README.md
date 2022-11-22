@@ -84,8 +84,19 @@ Change the version name in the .config as follows (it will be added with this na
 
 Note: If in the future during compile it gives an error about certificates ("deb..cert.perm" not found), delete the debian..cert.perm mentioned in the message from the .config file and just leave it blank:
 **CONFIG_SYSTEM_TRUSTED_KEYS = ""**
+**SYSTEM_REVOCATION_KEYS = ""**
 
+Or via terminal:
 
+```shell
+scripts/config --disable SYSTEM_TRUSTED_KEYS
+scripts/config --disable SYSTEM_REVOCATION_KEYS
+```
 
+## System Call Addition Steps
 
+In the Linux kernel you downloaded, go to the file **arch/x86/entry/syscalls/syscall_64.tbl** and add your own system call with the next number to the end of the 300 system call. for example, if the next number is 335:
+
+335&emsp;common&emsp; your_name&emsp;sys_your_name
+(there are tab spaces between every parameter)
 
