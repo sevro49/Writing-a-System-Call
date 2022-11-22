@@ -63,3 +63,29 @@ zcat /boot/config-$(uname -r)
 ```
 If the config extension is not gz, you can use the regular **cat** command
 
+Or you can use **cp** command. [Click here](https://www.cyberciti.biz/faq/how-to-copy-one-file-contents-to-another-file-in-linux/ "Click here")
+
+Then, to edit the kernel config file that you will create from the existing config file in the system:
+
+```shell
+yes "" | make oldconfig
+```
+
+Or to copy exactly what is in the system:
+
+```shell
+make olddefconfig
+```
+
+Change the version name in the .config as follows (it will be added with this name when the kernel is added to system)
+
+- Edit **CONFIG_LOCALVERSION="..."**
+- **CONFIG_LOCALVERSION="-yourname"**
+
+Note: If in the future during compile it gives an error about certificates ("deb..cert.perm" not found), delete the debian..cert.perm mentioned in the message from the .config file and just leave it blank:
+**CONFIG_SYSTEM_TRUSTED_KEYS = ""**
+
+
+
+
+
