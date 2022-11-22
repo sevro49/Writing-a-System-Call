@@ -202,6 +202,14 @@ To run in terminal:
 chmod u+x deploy.sh 
 ./deploy.sh
 ```
+This process takes some time (like 4 - 5 hours depending your hardware)
+
+While compiling you must see something like:
+![](pictures/compiling-kernel.png)
+
+End of compiling:
+![](pictures/end-of-compiling.png)
+
 
 If you haven't received any errors, the kernel has been succesfully added (see the updated list when you look at **$sudo update-grub**).
 
@@ -209,3 +217,57 @@ Reboot the system (**$reboot**) and select the kernel you created from the grub 
 
 ![](pictures/grub-menu.png)
 ![](pictures/grub-menu-advanced-settings.png)
+
+After reboot, you can see currently running kernel with: 
+
+```shell
+uname -r
+```
+
+![](pictures/uname-r.png)
+
+
+## Test Program
+
+The test program below calls the system call you added by its number. You can create C file:
+
+```shell
+cat > testprogram.c
+```
+
+After this command, you will be inside testprogam.c. You can edit it from terminal or text editor. I recommend you text editor. To exit testprogram.c press "CTRL + D".
+
+Open testprogram.c and write the following codes:
+
+```c
+/**
+ * Test the stephen syscall (#3..)
+ */
+#define _GNU_SOURCE
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <stdio.h>
+#include <errno.h>
+
+/*
+ * Put your syscall number here.
+ */
+#define SYS_your_name 335 /*must be same with syscall table no*/
+
+int main(int argc, char **argv)
+{
+  if (argc <= 1) {
+    printf("Must provide a string to give to system call.\n");
+    return -1;
+  }
+  char *arg = argv[1];
+  printf("Making system call with \"%s\".\n", arg);
+  long res = syscall(SYS_your_name, arg); /*yani syscall(335,arg)*/
+
+  if (res == -1)
+    fprintf(stderr, "your name failed, errno = %d\n", errno);
+  else
+    printf("System call your name returned %ld.\n", res);
+  return res;
+}
+```
