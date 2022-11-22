@@ -203,3 +203,9 @@ chmod u+x deploy.sh
 ./deploy.sh
 ```
 
+If you haven't received any errors, the kernel has been succesfully added (see the updated list when you look at **$sudo update-grub**).
+
+Reboot the system (**$reboot**) and select the kernel you created from the grub menu (by pressing the ESC key, select your own suffixed version from the "advance options" in grub)
+
+![](pictures/grub-menu.png)
+![](pictures/grub-menu-advanced-settings.png)
