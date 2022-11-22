@@ -15,8 +15,8 @@ One or two details may differ depending on the kernel versions you are using. Si
 -  Learn how to test the operation of the added system call by calling the C program (syscall (2) - Linux manual page) and to experience debugging the problems and errors that will arise in these stages
 
 ## Resources
-- The following system call installation, test programs, and steps are largely taken from: [Tutorial - Write a System Call • Stephen Brennan ](http://https://brennan.io/2016/11/14/kernel-dev-ep3/ "sdsf")
-- For more details [Adding a New System Call — The Linux Kernel documentation](http://https://www.kernel.org/doc/html/latest/process/adding-syscalls.html "Adding a New System Call — The Linux Kernel documentation")
+- The following system call installation, test programs, and steps are largely taken from: [Tutorial - Write a System Call • Stephen Brennan](https://brennan.io/2016/11/14/kernel-dev-ep3/ "Tutorial - Write a System Call • Stephen Brennan")
+- For more details [Adding a New System Call — The Linux Kernel documentation](http://www.kernel.org/doc/html/latest/process/adding-syscalls.html "Adding a New System Call — The Linux Kernel documentation")
 
 ## Kernel Download
 First of all, in order not to harm your own system, I recommend you to install VMware or VirtualBox.
