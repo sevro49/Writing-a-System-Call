@@ -8,7 +8,7 @@ One or two details may differ depending on the kernel versions you are using. Si
 - Kernel, User space, Kernel space etc. definitions
 - Linux Terminal
 
-## Learnin Objectives
+## Learning Objectives
 -  Compile the Linux kernel
 -  Adding a new system call by making changes on the kernel
 -  Copying data from user space to kernel space (with copy_from_user or strncpy_from_user).
@@ -38,6 +38,7 @@ To see the currently running kernel version on your system:
 ```shell
 uname -r
 ```
+
 
 You can download via terminal or browser, does not matter. You can use **wget, curl** etc. in terminal
 
@@ -97,6 +98,108 @@ scripts/config --disable SYSTEM_REVOCATION_KEYS
 
 In the Linux kernel you downloaded, go to the file **arch/x86/entry/syscalls/syscall_64.tbl** and add your own system call with the next number to the end of the 300 system call. for example, if the next number is 335:
 
-335&emsp;common&emsp; your_name&emsp;sys_your_name
+**335&emsp;common&emsp; your_name&emsp;sys_your_name**
+
 (there are tab spaces between every parameter)
+
+If you are using a 64-bit system, you can add 548 to the end. The rest is the same as 335. Then in the Linux kernel you downloaded, add the following code to kernel/sys.c file:
+
+```c
+SYSCALL_DEFINE1(your_name, char *, msg)
+{
+  char buf[256];
+  long copied = strncpy_from_user(buf, msg, sizeof(buf));
+/*note:  copy_from_user and strncpy_from_user are similar: data is copied from userspace to kernel space... We can do the opposite with copy_to_user
+*/
+  if (copied < 0 || copied == sizeof(buf))
+    return -EFAULT;
+  printk(KERN_INFO "yourname syscall called with \"%s\"\n", buf);
+  return 0;
+}
+```
+
+##### !! Make sure that this is not in any #if etc. macro blog !!
+
+## Kernel Build and Install Steps
+Below is given only for ubuntu/debian and arch Linux; You can find similar steps for other Linuxed on the web.
+
+### Debian (Ubuntu etc.)
+Create a deploy.sh file
+
+```shell
+nano deploy.sh
+```
+and edit it as below (You can run the contents of the deploy.sh one by one):
+
+```shell
+#!/usr/bin/bash
+# UBUNTU-DEBIAN deploy
+
+# This causes the script to exit if an error occurs
+set -e
+
+# Compile the kernel
+make -j4
+
+# Compile and install modules
+
+# If you have activated too many modules, 
+# the resulting kernel may be too large for the
+# machine defined in the VirtualBox. You can
+# specify the modules to be loaded make menuconfig
+
+make -j4 modules_install
+
+# Insalling the kernel in /boot and grub menu
+make install
+
+# may be necessary
+#update-initramfs -c -k version
+#update-grub 
+```
+To run in terminal:
+
+```shell
+chmod u+x deploy.sh 
+./deploy.sh
+```
+
+
+### Archlinux 
+
+```shell
+#!/usr/bin/bash
+# ARCHLINUX -Compile and "deploy" 
+
+# Change this if you'd like. It has no relation
+# to the suffix set in the kernel config.
+SUFFIX="-yourname"
+
+# This causes the script to exit if an error occurs
+set -e
+
+# Compile the kernel
+make
+# Compile and install modules
+make modules_install
+
+# Install kernel image
+cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux$SUFFIX
+
+# Create preset and build initramfs
+sed s/linux/linux$SUFFIX/g \
+    </etc/mkinitcpio.d/linux.preset \
+    >/etc/mkinitcpio.d/linux$SUFFIX.preset
+mkinitcpio -p linux$SUFFIX
+
+# Update bootloader entries with new kernels.
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+To run in terminal:
+
+```shell
+chmod u+x deploy.sh 
+./deploy.sh
+```
 
