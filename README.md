@@ -12,7 +12,7 @@ One or two details may differ depending on the kernel versions you are using. Si
 -  Compile the Linux kernel
 -  Adding a new system call by making changes on the kernel
 -  Copying data from user space to kernel space (with copy_from_user or strncpy_from_user).
--  Learn how to test the operation of the added system call by calling the C program (syscall (2) - Linux manual page) and to experience debugging the problems and errors that will arise in these stages
+-  Learn how to test the operation of the added system call by calling the C program ([syscall (2) - Linux manual page](https://man7.org/linux/man-pages/man2/syscall.2.html)) and to experience debugging the problems and errors that will arise in these stages
 
 ## Resources
 - The following system call installation, test programs, and steps are largely taken from: [Tutorial - Write a System Call • Stephen Brennan](https://brennan.io/2016/11/14/kernel-dev-ep3/ "Tutorial - Write a System Call • Stephen Brennan")
@@ -27,7 +27,7 @@ If you have good Linux-terminal knowledge, you can install without GUI and minim
 
 First download the linux kernel from [kernel.org](http://kernel.org "kernel.org") by running the Linux you installed in VirtualBox (if you want, it can be the same version as the kernel you use on your system.)
 
-You can download it with the command below, the it downloads it to the /usr/src/ folder
+You can download it with the command below, then it downloads it to the /usr/src/ folder
 
 ```shell
 sudo apt-get source linux-source
@@ -84,8 +84,8 @@ Change the version name in the .config as follows (it will be added with this na
 - **CONFIG_LOCALVERSION="-yourname"**
 
 Note: If in the future during compile it gives an error about certificates ("deb..cert.perm" not found), delete the debian..cert.perm mentioned in the message from the .config file and just leave it blank:
-**CONFIG_SYSTEM_TRUSTED_KEYS = ""**
-**SYSTEM_REVOCATION_KEYS = ""**
+- **CONFIG_SYSTEM_TRUSTED_KEYS = ""**
+- **SYSTEM_REVOCATION_KEYS = ""**
 
 Or via terminal:
 
@@ -109,7 +109,9 @@ SYSCALL_DEFINE1(your_name, char *, msg)
 {
   char buf[256];
   long copied = strncpy_from_user(buf, msg, sizeof(buf));
-/*note:  copy_from_user and strncpy_from_user are similar: data is copied from userspace to kernel space... We can do the opposite with copy_to_user
+/*note:  copy_from_user and strncpy_from_user are similar: 
+data is copied from userspace to kernel space... We can 
+do the opposite with copy_to_user
 */
   if (copied < 0 || copied == sizeof(buf))
     return -EFAULT;
@@ -121,7 +123,7 @@ SYSCALL_DEFINE1(your_name, char *, msg)
 ##### !! Make sure that this is not in any #if etc. macro blog !!
 
 ## Kernel Build and Install Steps
-Below is given only for ubuntu/debian and arch Linux; You can find similar steps for other Linuxed on the web.
+Below is given only for ubuntu/debian and arch Linux; You can find similar steps for other Linuxes on the web.
 
 ### Debian (Ubuntu etc.)
 Create a deploy.sh file
@@ -252,7 +254,8 @@ Open testprogram.c and write the following codes:
 /*
  * Put your syscall number here.
  */
-#define SYS_your_name 335 /*must be same with syscall table no*/
+#define SYS_your_name 335 /*must be same with syscall table no.
+If you are using 64-bit system, then edit it accordingly*/
 
 int main(int argc, char **argv)
 {
@@ -271,3 +274,5 @@ int main(int argc, char **argv)
   return res;
 }
 ```
+
+After writing codes, do not forget to save
