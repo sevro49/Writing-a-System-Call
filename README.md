@@ -265,7 +265,7 @@ int main(int argc, char **argv)
   }
   char *arg = argv[1];
   printf("Making system call with \"%s\".\n", arg);
-  long res = syscall(SYS_your_name, arg); /*yani syscall(335,arg)*/
+  long res = syscall(SYS_your_name, arg); /*I mean syscall(335,arg)*/
 
   if (res == -1)
     fprintf(stderr, "your name failed, errno = %d\n", errno);
@@ -275,4 +275,21 @@ int main(int argc, char **argv)
 }
 ```
 
-After writing codes, do not forget to save
+After writing codes, do not forget to save and type these:
+
+```shell
+gcc testprogram.c -o testprogram
+```
+You will create an object file of testprogram.c
+
+And finally, you will see the result. We will run our C program with a string. You have to provide a string. Otherwise program gives you an error like **"Must provide a string to give to system call."**
+
+```shell
+./testprogram 'Hello World!'
+```
+
+If you have done everything correctly, you'll see a message like this:
+
+![](pictures/test-program-output.png)
+
+Congrats!! That is all! I hope you learned something and can benefit from them.
